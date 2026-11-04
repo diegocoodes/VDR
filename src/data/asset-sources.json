@@ -1,0 +1,147 @@
+{
+  "checkedAt": "2026-11-03",
+  "note": "Acervo original publicado no site oficial da VDR. Apenas recorte, redimensionamento e compressão. Sem geração de resultados artificiais.",
+  "logo": "https://static.wixstatic.com/media/665b27_6668eee0431c4a89be09fd3c8708e011~mv2.png",
+  "photos": [
+    {
+      "file": "/images/hero.webp",
+      "source": "https://static.wixstatic.com/media/665b27_810bb987714149dca92a45920f842c9c~mv2.webp",
+      "page": "home"
+    },
+    {
+      "file": "/images/servico-ppf.webp",
+      "source": "https://static.wixstatic.com/media/665b27_c77d0a367aec4f05be31848959013c90~mv2.jpg",
+      "page": "ppf"
+    },
+    {
+      "file": "/images/servico-vitrificacao.webp",
+      "source": "https://static.wixstatic.com/media/665b27_b09a2c0a58974811a7012eaf25f6beb5~mv2.png",
+      "page": "zero-km"
+    },
+    {
+      "file": "/images/servico-polimento.webp",
+      "source": "https://static.wixstatic.com/media/665b27_c8a53cc9e0074c51b8755574da61c6a3~mv2.png",
+      "page": "home"
+    },
+    {
+      "file": "/images/servico-zero-km.webp",
+      "source": "https://static.wixstatic.com/media/665b27_c578fc2a1de74a319775ce0ae80bcfea~mv2.jpg",
+      "page": "home"
+    },
+    {
+      "file": "/images/ppf-parcial.webp",
+      "source": "https://static.wixstatic.com/media/665b27_e5767a8d7f2d483e9820cea9d1cb0dab~mv2.jpeg",
+      "page": "ppf"
+    },
+    {
+      "file": "/images/ppf-frontal.webp",
+      "source": "https://static.wixstatic.com/media/665b27_2194448d5a514376ad13143062e13aeb~mv2.jpeg",
+      "page": "ppf"
+    },
+    {
+      "file": "/images/ppf-completo.webp",
+      "source": "https://static.wixstatic.com/media/665b27_a8c3f65725374279b3b30b8817f981e6~mv2.jpeg",
+      "page": "ppf"
+    },
+    {
+      "file": "/images/projeto-bmw.webp",
+      "source": "https://static.wixstatic.com/media/665b27_8755effdff724102a078ec7bf9d34063~mv2.png",
+      "page": "home"
+    },
+    {
+      "file": "/images/projeto-audi.webp",
+      "source": "https://static.wixstatic.com/media/665b27_05aa1e7de36a4bd3ab70eda9fb1bf3ed~mv2.png",
+      "page": "home"
+    },
+    {
+      "file": "/images/projeto-detalhe.webp",
+      "source": "https://static.wixstatic.com/media/665b27_3d82a764b8fa4337a4628a9b160594f0~mv2.jpg",
+      "page": "home"
+    },
+    {
+      "file": "/images/projeto-aplicacao.webp",
+      "source": "https://static.wixstatic.com/media/665b27_ffc884dd6e064280b2023d73ad1a46f6~mv2.jpeg",
+      "page": "ppf"
+    },
+    {
+      "file": "/images/projeto-acabamento.webp",
+      "source": "https://static.wixstatic.com/media/665b27_a4bef57888a54eaf8b82ca847135bfa6~mv2.jpg",
+      "page": "home"
+    },
+    {
+      "file": "/images/projeto-vitrificacao.webp",
+      "source": "https://static.wixstatic.com/media/665b27_2f6120db5a09476b857a0e782c3937cb~mv2.jpeg",
+      "page": "zero-km"
+    },
+    {
+      "file": "/images/sobre.webp",
+      "source": "https://static.wixstatic.com/media/665b27_b3fca5f575694276a346a298ac6da953~mv2.jpeg",
+      "page": "home"
+    },
+    {
+      "file": "/images/zero-km.webp",
+      "source": "https://static.wixstatic.com/media/665b27_9949f4b760634d6bbe0d05578a6216c8~mv2.jpg",
+      "page": "zero-km"
+    },
+    {
+      "file": "/images/contato.webp",
+      "source": "https://static.wixstatic.com/media/665b27_14135702b5bc42b69d8310978f2130d4~mv2.jpeg",
+      "page": "zero-km"
+    }
+  ],
+  "clientMedia": [
+    {
+      "file": "/videos/hero.mp4",
+      "source": "/videios/section-Hero.mp4",
+      "note": "Vídeo fornecido pelo cliente. Versão H.264 para web, sem áudio, duração integral."
+    },
+    {
+      "file": "/videos/vdr-bmw.mp4",
+      "source": "/videios/VDR - BMW Completo.mp4",
+      "note": "Vídeo fornecido pelo cliente. Versão H.264 1080 x 1920, duração e áudio preservados."
+    },
+    {
+      "file": "/images/hero-video-poster.webp",
+      "source": "/videios/section-Hero.mp4",
+      "note": "Quadro extraído do vídeo fornecido pelo cliente."
+    },
+    {
+      "file": "/images/bmw-video-poster.webp",
+      "source": "/videios/VDR - BMW Completo.mp4",
+      "note": "Quadro extraído do vídeo fornecido pelo cliente."
+    },
+    {
+      "file": "/images/vdr-perfil.webp",
+      "source": "/images/VDR-PERFIL.jpg",
+      "note": "Imagem fornecida pelo cliente, redimensionada e comprimida em WebP."
+    },
+    {
+      "file": "/images/servico-vitrificacao-cliente.webp",
+      "source": "/images/vitrificação.jpg",
+      "note": "Fotografia fornecida pelo cliente, redimensionada e otimizada em WebP."
+    },
+    {
+      "file": "/images/servico-polimento-cliente.webp",
+      "source": "/images/polimento.jpg",
+      "note": "Fotografia fornecida pelo cliente, redimensionada e otimizada em WebP."
+    },
+    {
+      "file": "/images/servico-preparacao-cliente.webp",
+      "source": "/images/lavagem.jpg",
+      "note": "Fotografia fornecida pelo cliente, redimensionada e otimizada em WebP."
+    }
+  ],
+  "externalMedia": [
+    {
+      "provider": "YouTube",
+      "videoId": "y8pC5TZ4sAw",
+      "source": "https://www.youtube.com/watch?v=y8pC5TZ4sAw",
+      "startSeconds": 8,
+      "title": "Liberty Walk GTR {SPITS FLAMES)",
+      "author": "Remnant Media",
+      "poster": "/images/hero-youtube-poster.webp",
+      "posterSource": "https://i.ytimg.com/vi/y8pC5TZ4sAw/maxresdefault.jpg",
+      "note": "Vídeo indicado pelo cliente, incorporado pelo player oficial. Não é apresentado como projeto executado pela VDR."
+    }
+  ]
+}

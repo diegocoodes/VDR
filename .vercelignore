@@ -1,0 +1,13 @@
+.git/
+.next/
+.vercel/
+.work/
+node_modules/
+playwright-report/
+test-results/
+coverage/
+*.tsbuildinfo
+*.log
+.env*
+public/videios/
+public/videos/hero.mp4

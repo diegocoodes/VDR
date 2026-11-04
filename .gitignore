@@ -1,0 +1,19 @@
+node_modules/
+.next/
+.vercel/
+out/
+.work/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+.env*
+!.env.example
+
+# Originais preservados localmente. O site utiliza as versões otimizadas.
+/public/videios/
+/public/videos/hero.mp4

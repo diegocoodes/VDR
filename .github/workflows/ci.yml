@@ -1,0 +1,28 @@
+name: Validar projeto
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Lint e build no Linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Instalar dependências
+        run: npm ci --include=dev
+      - name: Validar código
+        run: npm run lint
+      - name: Gerar build de produção e verificar TypeScript
+        run: npm run build
