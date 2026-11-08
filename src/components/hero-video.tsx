@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowUpRight, Pause, Play } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { loadYouTubeApi, type YouTubePlayer } from '@/lib/youtube';
 
@@ -16,9 +16,6 @@ export function HeroVideo({
 }) {
   const container = useRef<HTMLDivElement>(null);
   const player = useRef<YouTubePlayer | null>(null);
-  const intent = useRef<'auto' | 'play' | 'pause'>('auto');
-  const syncPlayback = useRef<() => void>(() => {});
-  const [playing, setPlaying] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -32,8 +29,7 @@ export function HeroVideo({
     const shouldPlay = () =>
       visible &&
       !document.hidden &&
-      (intent.current === 'play' ||
-        (intent.current === 'auto' && !reduced.matches));
+      !reduced.matches;
     const sync = () => {
       if (!ready || !player.current) return;
       if (shouldPlay()) {
@@ -41,7 +37,6 @@ export function HeroVideo({
         player.current.playVideo();
       } else player.current.pauseVideo();
     };
-    syncPlayback.current = sync;
     const observer = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
@@ -50,11 +45,7 @@ export function HeroVideo({
       { threshold: 0.15 },
     );
     observer.observe(element);
-    const onPreferenceChange = () => {
-      intent.current = 'auto';
-      sync();
-    };
-    reduced.addEventListener('change', onPreferenceChange);
+    reduced.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
 
     void loadYouTubeApi()
@@ -89,10 +80,10 @@ export function HeroVideo({
             },
             onStateChange: (event) => {
               if (disposed) return;
-              setPlaying(event.data === 1);
               if (event.data === 5) sync();
               if (event.data === 1) {
                 setHasPlayed(true);
+                setFailed(false);
                 if (!shouldPlay()) event.target.pauseVideo();
               }
               if (event.data === 0 && shouldPlay()) {
@@ -101,13 +92,10 @@ export function HeroVideo({
               }
             },
             onError: () => {
-              if (!disposed) {
-                setFailed(true);
-                setPlaying(false);
-              }
+              if (!disposed) setFailed(true);
             },
             onAutoplayBlocked: () => {
-              if (!disposed) setPlaying(false);
+              if (!disposed) setFailed(true);
             },
           },
         });
@@ -126,18 +114,12 @@ export function HeroVideo({
     return () => {
       disposed = true;
       observer.disconnect();
-      reduced.removeEventListener('change', onPreferenceChange);
+      reduced.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
       player.current?.destroy();
       player.current = null;
-      syncPlayback.current = () => {};
     };
   }, [videoId, startSeconds]);
-
-  function toggle() {
-    intent.current = playing ? 'pause' : 'play';
-    syncPlayback.current();
-  }
 
   return (
     <>
@@ -157,7 +139,7 @@ export function HeroVideo({
           aria-hidden="true"
         />
       </div>
-      {failed ? (
+      {failed && (
         <a
           className="hero-video-control"
           href={`https://www.youtube.com/watch?v=${videoId}&t=${startSeconds}s`}
@@ -166,24 +148,6 @@ export function HeroVideo({
         >
           Assistir no YouTube <ArrowUpRight size={15} aria-hidden="true" />
         </a>
-      ) : (
-        <button
-          type="button"
-          className="hero-video-control"
-          onClick={toggle}
-          aria-label={
-            playing
-              ? 'Pausar vídeo de apresentação'
-              : 'Reproduzir vídeo de apresentação'
-          }
-        >
-          {playing ? (
-            <Pause size={15} aria-hidden="true" />
-          ) : (
-            <Play size={15} aria-hidden="true" />
-          )}
-          <span>{playing ? 'Pausar vídeo' : 'Reproduzir vídeo'}</span>
-        </button>
       )}
     </>
   );

@@ -1893,7 +1893,7 @@ section[id] {
   }
 }
 
-/* Vídeo de apresentação com controle de movimento */
+/* Link alternativo quando o vídeo de apresentação está indisponível */
 .hero-photo video {
   position: absolute;
   inset: 0;
@@ -2894,6 +2894,11 @@ h3 {
 /* Filme BMW sem barra de controles */
 .project-video video {
   clip-path: polygon(6% 0, 100% 0, 100% 96.625%, 94% 100%, 0 100%, 0 3.375%);
+  pointer-events: none;
+}
+.project-video.has-controls video {
+  clip-path: none;
+  pointer-events: auto;
 }
 .project-video-border {
   position: absolute;
@@ -2926,37 +2931,6 @@ h3 {
     stroke-dashoffset: 0;
   }
 }
-.project-video-action {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  padding: 0;
-  background: transparent;
-  border: 0;
-}
-.project-video-action > span {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 14px;
-  color: var(--accent);
-  background: #090b0aee;
-  font-size: 10px;
-  font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.2s;
-  white-space: nowrap;
-}
-.project-video-action:focus-visible {
-  outline-offset: -8px;
-}
-.project-video-action:focus-visible > span {
-  opacity: 1;
-}
-
 @media (max-width: 1199px) {
   .ppf-lab {
     grid-template-columns: 226px minmax(0, 1fr);
@@ -3187,5 +3161,244 @@ h3 {
   }
   .bodywork-line {
     stroke-dashoffset: 0;
+  }
+}
+
+/* Entrada da marca sobre o mesmo fundo fluido das seções. */
+.brand-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg);
+  animation: brand-intro-exit 0.65s 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.brand-intro::before {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(ellipse at 25% 40%, #b7ff001c, transparent 48%),
+    radial-gradient(ellipse at 80% 65%, #5b8f1729, transparent 45%);
+  animation: brand-intro-atmosphere 4s ease-in-out infinite alternate;
+}
+.brand-intro .section-atmosphere {
+  max-height: none;
+  mask-image: none;
+}
+.brand-intro .section-atmosphere [data-dye-whorl] {
+  opacity: 0.75;
+}
+.brand-intro-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  width: min(64vw, 440px);
+}
+.brand-intro-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 35px #b7ff0015);
+  animation: brand-logo-reveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.brand-intro-line {
+  width: 70px;
+  height: 2px;
+  margin-top: 35px;
+  background: var(--accent);
+  box-shadow: 0 0 20px #b7ff0055;
+  transform-origin: left;
+  animation: brand-line-reveal 1.1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.brand-intro-content p {
+  margin-top: 18px;
+  font-size: clamp(8px, 0.8vw, 10px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #c3cbbb;
+  animation: brand-logo-reveal 0.8s 0.35s both;
+}
+@keyframes brand-logo-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    clip-path: inset(0);
+  }
+}
+@keyframes brand-line-reveal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes brand-intro-atmosphere {
+  from {
+    transform: translate(-3%, -2%) scale(1);
+  }
+  to {
+    transform: translate(3%, 2%) scale(1.12);
+  }
+}
+@keyframes brand-intro-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-3%);
+  }
+}
+
+/* PPF em destaque, com filme vertical e comparação de coberturas. */
+.ppf-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(40px, 7vw, 100px);
+  padding-bottom: 64px;
+}
+.ppf-film-copy h2 {
+  font-size: clamp(3rem, 4.5vw, 4.8rem);
+  line-height: 1.03;
+}
+.ppf-film-copy > p:not(.eyebrow) {
+  max-width: 440px;
+  margin-top: 26px;
+  color: #b2baab;
+  font-size: 14px;
+}
+.ppf-film-features {
+  display: grid;
+  gap: 17px;
+  margin-block: 30px 36px;
+}
+.ppf-film-copy > .button {
+  font-size: 10px;
+}
+.ppf-film-copy > p.ppf-film-note {
+  max-width: 390px;
+  margin-top: 20px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.ppf-film-frame {
+  justify-self: end;
+  width: min(100%, 390px);
+  min-width: 0;
+}
+.ppf-film-frame .project-video {
+  width: 100%;
+  background: transparent;
+}
+.ppf-film-frame .project-border-runner {
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px #b7ff0088);
+}
+.ppf-film-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 17px;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: #9ba98e;
+}
+.ppf-film-caption > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+}
+.ppf-film-caption i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 9px #b7ff0066;
+}
+.ppf-coverage-heading {
+  padding-top: 42px;
+  margin-bottom: 28px;
+  border-top: 1px solid #b7ff0026;
+}
+.ppf-coverage-heading h3 {
+  font-size: clamp(2.1rem, 3.1vw, 3rem);
+  line-height: 1.1;
+}
+.ppf-coverage-heading > p:not(.eyebrow) {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  body * {
+    cursor: url('/images/vdr-cursor.png') 3 3, auto;
+  }
+  input,
+  textarea,
+  [contenteditable='true'] {
+    cursor: text;
+  }
+}
+@media (max-width: 899px) {
+  .ppf-showcase {
+    gap: 32px;
+  }
+  .ppf-film-copy h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  .ppf-film-copy > .button {
+    padding-inline: 18px;
+    font-size: 9px;
+  }
+}
+@media (max-width: 767px) {
+  .ppf-showcase {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+    padding-bottom: 40px;
+  }
+  .ppf-film-copy h2 {
+    font-size: clamp(2.5rem, 9.5vw, 4rem);
+  }
+  .ppf-film-copy > p:not(.eyebrow) {
+    margin-top: 22px;
+    font-size: 13px;
+  }
+  .ppf-film-copy > p.ppf-film-note {
+    font-size: 11px;
+    margin-top: 18px;
+  }
+  .ppf-film-features {
+    gap: 15px;
+    margin-block: 24px 28px;
+  }
+  .ppf-film-frame {
+    justify-self: center;
+    width: min(100%, 370px);
+  }
+  .ppf-coverage-heading {
+    padding-top: 32px;
+  }
+}
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .brand-intro {
+    display: none;
   }
 }

@@ -91,6 +91,21 @@
   ],
   "clientMedia": [
     {
+      "file": "/videos/vdr-ppf-tijolo.mp4",
+      "source": "/videios/VDR - Video Tijolo.mp4",
+      "note": "Vídeo fornecido pelo cliente. Versão H.264 1080 x 1920 otimizada para web, com áudio original em AAC, duração integral e faststart."
+    },
+    {
+      "file": "/images/ppf-tijolo-poster.webp",
+      "source": "/videios/VDR - Video Tijolo.mp4",
+      "note": "Quadro extraído do vídeo fornecido pelo cliente."
+    },
+    {
+      "file": "/images/vdr-cursor.png",
+      "source": "/images/vdr-logo-original.png",
+      "note": "Símbolo original da marca redimensionado em PNG transparente para o cursor de mouse."
+    },
+    {
       "file": "/videos/hero.mp4",
       "source": "/videios/section-Hero.mp4",
       "note": "Vídeo fornecido pelo cliente. Versão H.264 para web, sem áudio, duração integral."

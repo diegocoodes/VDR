@@ -8,6 +8,7 @@ import '@fontsource-variable/manrope';
 import './globals.css';
 import { company } from '@/data/site';
 import { MotionProvider } from '@/components/reveal';
+import { BrandIntro } from '@/components/brand-intro';
 
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
@@ -53,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <BrandIntro />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

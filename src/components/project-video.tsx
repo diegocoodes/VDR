@@ -2,22 +2,38 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export function ProjectVideo({ src, poster }: { src: string; poster: string }) {
+export function ProjectVideo({
+  src,
+  poster,
+  label = 'Projeto BMW completo da VDR Studio Automotivo',
+  controls = false,
+}: {
+  src: string;
+  poster: string;
+  label?: string;
+  controls?: boolean;
+}) {
   const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
-  const intent = useRef<'auto' | 'play' | 'pause'>('auto');
+  const pausedByUser = useRef(false);
+  const pausedAutomatically = useRef(false);
+  const frame = controls
+    ? 'M2 2H598V1064H2Z'
+    : 'M36 2H598V1030L564 1064H2V36Z';
   useEffect(() => {
     const element = video.current;
     if (!element) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     let visible = false;
     const sync = () => {
-      const allowed =
-        intent.current === 'play' ||
-        (intent.current === 'auto' && !reduced.matches);
-      if (visible && !document.hidden && allowed)
+      if (
+        visible && !document.hidden && !reduced.matches && !pausedByUser.current
+      )
         void element.play().catch(() => {});
-      else element.pause();
+      else if (!element.paused) {
+        pausedAutomatically.current = true;
+        element.pause();
+      }
     };
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -27,34 +43,19 @@ export function ProjectVideo({ src, poster }: { src: string; poster: string }) {
       { threshold: 0.2 },
     );
     observer.observe(element);
-    const onPreferenceChange = () => {
-      intent.current = 'auto';
-      sync();
-    };
-    reduced.addEventListener('change', onPreferenceChange);
+    reduced.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     return () => {
       observer.disconnect();
-      reduced.removeEventListener('change', onPreferenceChange);
+      reduced.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
+      pausedAutomatically.current = true;
       element.pause();
     };
-  }, []);
-
-  function toggle() {
-    const element = video.current;
-    if (!element) return;
-    if (element.paused) {
-      intent.current = 'play';
-      void element.play().catch(() => {});
-    } else {
-      intent.current = 'pause';
-      element.pause();
-    }
-  }
+  }, [src, controls]);
 
   return (
-    <div className={`project-video${playing ? ' is-playing' : ''}`}>
+    <div className={`project-video${controls ? ' has-controls' : ''}${playing ? ' is-playing' : ''}`}>
       <video
         ref={video}
         src={src}
@@ -62,15 +63,33 @@ export function ProjectVideo({ src, poster }: { src: string; poster: string }) {
         muted
         loop
         playsInline
+        controls={controls}
+        controlsList={
+          controls
+            ? 'nodownload noremoteplayback'
+            : 'nodownload nofullscreen noremoteplayback'
+        }
+        disablePictureInPicture={!controls}
+        disableRemotePlayback
+        tabIndex={controls ? 0 : -1}
         preload="none"
         width={1080}
         height={1920}
-        aria-label="Projeto BMW completo da VDR Studio Automotivo"
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
+        aria-label={label}
+        onPlay={() => {
+          pausedByUser.current = false;
+          pausedAutomatically.current = false;
+          setPlaying(true);
+        }}
+        onPause={() => {
+          if (controls && !pausedAutomatically.current)
+            pausedByUser.current = true;
+          pausedAutomatically.current = false;
+          setPlaying(false);
+        }}
       >
         Seu navegador não suporta este vídeo.{' '}
-        <a href={src}>Abrir o projeto BMW</a>.
+        <a href={src}>Abrir vídeo: {label}</a>.
       </video>
       <svg
         className="project-video-border"
@@ -80,25 +99,16 @@ export function ProjectVideo({ src, poster }: { src: string; poster: string }) {
       >
         <path
           className="project-border-track"
-          d="M36 2H598V1030L564 1064H2V36Z"
+          d={frame}
           vectorEffect="non-scaling-stroke"
         />
         <path
           className="project-border-runner"
-          d="M36 2H598V1030L564 1064H2V36Z"
+          d={frame}
           vectorEffect="non-scaling-stroke"
           pathLength="1000"
         />
       </svg>
-      <button
-        type="button"
-        className="project-video-action"
-        onClick={toggle}
-        aria-label={playing ? 'Pausar projeto BMW' : 'Reproduzir projeto BMW'}
-        title={playing ? 'Pausar vídeo' : 'Reproduzir vídeo'}
-      >
-        <span>{playing ? 'Pausar vídeo' : 'Reproduzir vídeo'}</span>
-      </button>
     </div>
   );
 }

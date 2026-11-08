@@ -150,23 +150,66 @@ export default function Home() {
         >
           <AutomotiveDetails variant="bodywork" />
           <div className="container section-foreground">
-            <Reveal className="section-heading ppf-heading">
-              <div>
+            <div className="ppf-showcase">
+              <Reveal className="ppf-film-copy">
                 <Eyebrow>PPF • Paint Protection Film</Eyebrow>
                 <h2 id="ppf-title">
-                  <TextReveal text="A MELHOR PINTURA É AQUELA" /> <br />
-                  QUE VOCÊ{' '}
+                  <TextReveal text="A PINTURA É ORIGINAL." /> <br />
                   <span className="text-accent">
-                    <TextReveal text="NÃO PRECISOU REFAZER." />
+                    <TextReveal text="A PROTEÇÃO É VDR." />
                   </span>
                 </h2>
-              </div>
+                <p>
+                  Uma película transparente. Uma camada a mais de cuidado.
+                  Veja o PPF em ação e descubra como ajudar a preservar a
+                  pintura original do seu carro.
+                </p>
+                <div className="ppf-film-features">
+                  <Feature icon={ShieldCheck}>
+                    Barreira contra pequenos impactos
+                  </Feature>
+                  <Feature icon={Sparkles}>
+                    Acabamento original preservado
+                  </Feature>
+                  <Feature icon={Crosshair}>
+                    Aplicação cuidadosa em cada curva
+                  </Feature>
+                </div>
+                <ContactButton
+                  icon
+                  message="Olá! Conheci a VDR pelo site, vi o vídeo do PPF em ação e gostaria de proteger a pintura do meu veículo."
+                >
+                  Quero proteger minha pintura
+                </ContactButton>
+                <p className="ppf-film-note">
+                  O PPF ajuda a reduzir danos. A proteção depende do impacto,
+                  da cobertura e dos cuidados com o veículo.
+                </p>
+              </Reveal>
+              <Reveal className="ppf-film-frame">
+                <ProjectVideo
+                  src={media.ppf.src}
+                  poster={media.ppf.poster}
+                  label={media.ppf.label}
+                  controls
+                />
+                <div className="ppf-film-caption">
+                  <span>
+                    <i aria-hidden="true" />PPF EM AÇÃO
+                  </span>
+                  <span>VDR STUDIO AUTOMOTIVO</span>
+                </div>
+              </Reveal>
+            </div>
+            <div className="ppf-coverage-heading">
+              <Eyebrow>Proteção sob medida</Eyebrow>
+              <h3>
+                ESCOLHA ONDE <span className="text-accent">PROTEGER.</span>
+              </h3>
               <p>
-                Uma barreira física entre a pintura e o dia a dia. O PPF ajuda a
-                preservar o acabamento original, com uma aplicação cuidadosa em
-                cada curva.
+                Compare as coberturas e encontre a melhor opção para a sua rotina.
               </p>
-            </Reveal>
+            </div>
             <Reveal>
               <PpfSelector />
             </Reveal>

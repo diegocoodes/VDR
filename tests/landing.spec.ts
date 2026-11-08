@@ -101,13 +101,13 @@ test('comparação de PPF funciona por clique e teclado, com orçamento contextu
   );
 });
 
-test('vídeos reproduzem e o BMW usa moldura animada sem controles nativos', async ({
+test('PPF oferece controles e áudio; BMW mantém reprodução sem controles', async ({
   page,
 }) => {
-  const bmwRequests: string[] = [];
+  const videoRequests: string[] = [];
   page.on('request', (request) => {
-    if (request.url().includes('/videos/vdr-bmw.mp4'))
-      bmwRequests.push(request.url());
+    if (/\/videos\/vdr-(bmw|ppf-tijolo)\.mp4/.test(request.url()))
+      videoRequests.push(request.url());
   });
   await page.goto('/');
   const hero = page.locator('#inicio iframe');
@@ -125,53 +125,68 @@ test('vídeos reproduzem e o BMW usa moldura animada sem controles nativos', asy
     (window as Window & { __youtubeEnd?: () => void }).__youtubeEnd?.(),
   );
   expect((await youtubeState(page))?.seeks).toEqual([8]);
-  await page
-    .getByRole('button', { name: 'Pausar vídeo de apresentação' })
-    .click();
-  await expect
-    .poll(async () => (await youtubeState(page))?.playing)
-    .toBe(false);
-  await page
-    .getByRole('button', { name: 'Reproduzir vídeo de apresentação' })
-    .click();
-  await expect.poll(async () => (await youtubeState(page))?.playing).toBe(true);
+  await expect(
+    page.getByRole('button', { name: /Pausar|Reproduzir/ }),
+  ).toHaveCount(0);
+  expect(embedUrl.searchParams.get('controls')).toBe('0');
+  expect(videoRequests).toEqual([]);
+  for (const section of ['ppf', 'projetos']) {
+    const film = page.locator(`#${section} video`);
+    const controlled = section === 'ppf';
+    await expect(film).toHaveAttribute('preload', 'none');
+    await expect(film).toHaveJSProperty('controls', controlled);
+    await expect(film).toHaveJSProperty('muted', true);
+    await expect(film).toHaveJSProperty('loop', true);
+    await expect(film).toHaveJSProperty('disablePictureInPicture', !controlled);
+    await film.scrollIntoViewIfNeeded();
+    await expect.poll(() => film.evaluate(
+      (element: HTMLVideoElement) => !element.paused && element.currentTime > 0,
+    )).toBe(true);
+    await expect(film).toHaveJSProperty('videoWidth', 1080);
+    await expect(film).toHaveJSProperty('videoHeight', 1920);
+    await expect(page.locator(`#${section} .project-border-runner`)).toHaveCSS(
+      'animation-play-state', 'running',
+    );
+    if (controlled) {
+      await expect(film).toHaveCSS('pointer-events', 'auto');
+      await expect(film).toHaveCSS('clip-path', 'none');
+      await film.focus();
+      await page.keyboard.press('Space');
+      await expect(film).toHaveJSProperty('paused', true);
+      await page.locator('#servicos').scrollIntoViewIfNeeded();
+      await film.scrollIntoViewIfNeeded();
+      await expect(film).toHaveJSProperty('paused', true);
+      await film.focus();
+      await page.keyboard.press('Space');
+      await expect(film).toHaveJSProperty('paused', false);
+      await film.hover();
+      const bounds = await film.boundingBox();
+      expect(bounds).not.toBeNull();
+      // O botão de som faz parte dos controles internos do Chrome.
+      await film.click({ position: { x: bounds!.width - 120, y: bounds!.height - 48 } });
+      await expect(film).toHaveJSProperty('muted', false);
+      await expect.poll(() => film.evaluate(
+        element => (element as HTMLVideoElement & { webkitAudioDecodedByteCount: number }).webkitAudioDecodedByteCount,
+      )).toBeGreaterThan(0);
+    } else {
+      await film.click({ force: true });
+    }
+    await expect(film).toHaveJSProperty('paused', false);
+  }
+  expect(videoRequests.some(url => url.includes('vdr-ppf-tijolo.mp4'))).toBe(true);
+  expect(videoRequests.some(url => url.includes('vdr-bmw.mp4'))).toBe(true);
+  await expect(page.locator('#ppf video')).toHaveAttribute('src', '/videos/vdr-ppf-tijolo.mp4');
+  await expect(page.locator('#ppf video')).toHaveJSProperty('paused', true);
   const project = page.locator('#projetos video');
-  await expect(project).toHaveAttribute('preload', 'none');
-  await expect(project).toHaveJSProperty('controls', false);
-  await expect(project).toHaveJSProperty('muted', true);
-  await expect(project).toHaveJSProperty('loop', true);
   await expect(page.locator('#projetos img')).toHaveCount(0);
   await expect(
     page.getByRole('button', { name: /Ampliar fotografia/ }),
   ).toHaveCount(0);
-  expect(bmwRequests).toEqual([]);
-  await project.scrollIntoViewIfNeeded();
-  await expect
-    .poll(() =>
-      project.evaluate(
-        (element: HTMLVideoElement) =>
-          !element.paused && element.currentTime > 0,
-      ),
-    )
-    .toBe(true);
-  await expect(project).toHaveJSProperty('videoWidth', 1080);
-  await expect(project).toHaveJSProperty('videoHeight', 1920);
-  expect(bmwRequests.length).toBeGreaterThan(0);
-  await expect(page.locator('.project-border-runner')).toHaveCSS(
-    'animation-play-state',
-    'running',
-  );
-  await page.getByRole('button', { name: 'Pausar projeto BMW' }).click();
-  await expect(project).toHaveJSProperty('paused', true);
-  await expect(page.locator('.project-border-runner')).toHaveCSS(
-    'animation-play-state',
-    'paused',
-  );
-  await page.getByRole('button', { name: 'Reproduzir projeto BMW' }).focus();
-  await page.keyboard.press('Enter');
-  await expect(project).toHaveJSProperty('paused', false);
   await page.locator('#servicos').scrollIntoViewIfNeeded();
   await expect(project).toHaveJSProperty('paused', true);
+  await expect(page.locator('#projetos .project-border-runner')).toHaveCSS(
+    'animation-play-state', 'paused',
+  );
   await expect
     .poll(async () => (await youtubeState(page))?.playing)
     .toBe(false);
@@ -182,6 +197,27 @@ test('vídeos reproduzem e o BMW usa moldura animada sem controles nativos', asy
   expect(await page.locator('#sobre img').getAttribute('src')).toContain(
     'vdr-perfil.webp',
   );
+});
+
+test('entrada com a marca termina e o cursor usa a logo apenas com mouse', async ({
+  page, browser,
+}) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const intro = page.locator('.brand-intro');
+  await expect(intro).toHaveCSS('pointer-events', 'none');
+  await expect(intro.locator('img')).toHaveAttribute('src', /vdr-logo/);
+  await expect(intro.locator('.section-atmosphere')).toHaveCount(1);
+  await expect(intro).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Quero proteger meu carro', exact: true })).toBeVisible();
+  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+  expect(await page.locator('.brand-link').evaluate(element => getComputedStyle(element).cursor)).toContain('vdr-cursor.png');
+
+  const touch = await browser.newContext({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } });
+  const mobile = await touch.newPage();
+  await mockYouTube(mobile);
+  await mobile.goto(page.url());
+  expect(await mobile.locator('body').evaluate(element => getComputedStyle(element).cursor)).not.toContain('vdr-cursor.png');
+  await touch.close();
 });
 
 test('pacotes mantêm durações, benefícios e mensagens específicas no novo layout', async ({
@@ -374,9 +410,8 @@ test('acessibilidade WCAG AA em desktop, menu, vídeos e movimento reduzido', as
   await expect
     .poll(async () => (await youtubeState(page))?.playing)
     .toBe(false);
-  await expect(
-    page.getByRole('button', { name: 'Reproduzir vídeo de apresentação' }),
-  ).toBeVisible();
+  await expect(page.locator('.brand-intro')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Pausar|Reproduzir/ })).toHaveCount(0);
   const check = async () => {
     const result = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
@@ -392,7 +427,12 @@ test('acessibilidade WCAG AA em desktop, menu, vídeos e movimento reduzido', as
     ).toEqual([]);
   };
   await check();
-  await page.getByRole('button', { name: 'Reproduzir projeto BMW' }).click();
+  for (const section of ['ppf', 'projetos']) {
+    const film = page.locator(`#${section} video`);
+    await film.scrollIntoViewIfNeeded();
+    await expect(film).toHaveJSProperty('paused', true);
+    await expect(page.locator(`#${section} .project-border-runner`)).toHaveCSS('animation-name', 'none');
+  }
   await check();
   await page.setViewportSize({ width: 390, height: 844 });
   await check();

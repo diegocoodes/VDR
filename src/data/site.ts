@@ -28,6 +28,12 @@ export const media = {
     poster: '/images/bmw-video-poster.webp',
     original: '/videios/VDR - BMW Completo.mp4',
   },
+  ppf: {
+    src: '/videos/vdr-ppf-tijolo.mp4',
+    poster: '/images/ppf-tijolo-poster.webp',
+    original: '/videios/VDR - Video Tijolo.mp4',
+    label: 'PPF em ação — VDR, Vídeo Tijolo',
+  },
   about: {
     image: '/images/vdr-perfil.webp',
     original: '/images/VDR-PERFIL.jpg',
