@@ -117,6 +117,27 @@ Os scripts em `scripts/` registram a preparação do acervo. Para refazer a impo
 
 ## Publicação
 
+O build de produção usa `next build --webpack`. Isso permite que o Next.js utilize o compilador SWC em WebAssembly quando o binário nativo não é compatível com a GLIBC do servidor. O [Turbopack exige os bindings nativos](https://nextjs.org/docs/app/api-reference/turbopack#supported-platforms). A configuração fica em `next.config.mjs`, carregada diretamente pelo Node.js, sem compilar uma configuração TypeScript com SWC.
+
+### Hospedagem Node.js (Hostinger)
+
+Mantenha estas opções no painel de implantação:
+
+| Configuração | Valor |
+| --- | --- |
+| Tipo de aplicação | Next.js |
+| Node.js | `24.x` |
+| Branch | `main` |
+| Install Command | `npm ci --include=dev` (ou `npm install`, se definido pelo painel) |
+| Build Command | `npm run build` |
+| Output Directory | `.next` |
+| Start Command, quando solicitado | `npm start` |
+| Variáveis de ambiente obrigatórias | Nenhuma |
+
+Após atualizar a branch, execute uma nova implantação. O Next.js pode baixar automaticamente `@next/swc-wasm-nodejs` durante o build quando o compilador nativo estiver indisponível.
+
+### Vercel
+
 O repositório [diegocoodes/VDR](https://github.com/diegocoodes/VDR) está preparado para importação direta na Vercel. O arquivo `vercel.json` define o framework e os comandos de instalação e build; `package-lock.json` fixa as dependências e `engines.node` define Node.js 24.
 
 1. Na Vercel, selecione **Add New → Project** e importe **diegocoodes/VDR**.

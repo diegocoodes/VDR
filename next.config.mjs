@@ -1,6 +1,7 @@
-import type { NextConfig } from 'next';
+// @ts-check
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
   images: { formats: ['image/avif', 'image/webp'], qualities: [75, 88] },
